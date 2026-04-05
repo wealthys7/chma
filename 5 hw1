@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.interpolate import CubicSpline
+
+def f(x):
+    return 3 * np.sin(2.5 * x) * np.log10(x**2 + 4.3)
+
+x_start, x_end = -2, 2
+n_points = 4
+x_nodes = np.linspace(x_start, x_end, n_points)
+y_nodes = f(x_nodes)
+
+# Построение естественного кубического сплайна
+spline = CubicSpline(x_nodes, y_nodes, bc_type='natural')
+
+x_fine = np.linspace(x_start, x_end, 500)
+y_fine_true = f(x_fine)
+y_fine_spline = spline(x_fine)
+
+# 5. Визуализация
+plt.figure(figsize=(10, 6))
+
+# График исходной функции
+plt.plot(x_fine, y_fine_true, label='Исходная функция $f(x)$',
+         color='royalblue', linewidth=2, alpha=0.7)
+
+# График сплайна
+plt.plot(x_fine, y_fine_spline, label='Естественный кубический сплайн',
+         color='crimson', linestyle='--', linewidth=2)
+
+# Узлы интерполяции
+plt.scatter(x_nodes, y_nodes, color='black', s=50, zorder=5, label='Узлы интерполяции')
+
+plt.title('Аппроксимация функции кубическим сплайном (4 точки)', fontsize=14)
+plt.xlabel('x', fontsize=12)
+plt.ylabel('y', fontsize=12)
+plt.legend()
+plt.grid(True, linestyle=':', alpha=0.6)
+
+plt.show()
